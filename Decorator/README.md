@@ -7,6 +7,8 @@ eu não preciso extender a classe anterior, mas sim utilizar esse padrão,
 criando uma classe que vai utilizar a classe que trabalha com arquivos,
 implementando uma classe padrão.
 
+![Image Title](./decorator.png)
+
 Exemplo de uso do script: php decorator.php file.txt 'batman begins'
 
 ```bash
