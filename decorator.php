@@ -1,6 +1,6 @@
 <?php
 
-require './Adapter/adapter.php';
+require './Decorator/decorator.php';
 
 if(!isset($argv[1])
     || !isset($argv[2])
