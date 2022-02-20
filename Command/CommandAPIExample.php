@@ -5,10 +5,32 @@ namespace DesignPatterns\BetterCommandExample;
 require './Lib/MySimpleORM.php';
 
 use DesignPatterns\Lib\ORM\Model;
+use Exception;
+
+class Invoker
+{
+    private $command;
+
+    public function setCommand($command)
+    {
+        $this->command = $command;
+    }
+
+    public function executeCommand($data = null)
+    {
+        try {
+            $this->command->withData($data);
+            return $this->command->execute();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        
+    }
+}
 
 abstract class Command
 {
-    private $data;
+    public $data;
     abstract public function execute();
     public function withData($data)
     {
@@ -34,24 +56,17 @@ class GetProductsCommand extends Command
     }
 }
 
+class GetProductByIDCommand extends Command
+{
+    public function execute()
+    {
+        $product = new Product();
+        return $product->find($this->data);
+    }
+}
+
 class Product extends Model
 {
     protected $table = "products";
     protected $attributes = ['name', 'price'];
-}
-
-class Invoker
-{
-    private $command;
-
-    public function setCommand($command)
-    {
-        $this->command = $command;
-    }
-
-    public function executeCommand($data = null)
-    {
-        $this->command->withData($data);
-        return $this->command->execute();
-    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace DesignPatterns\Lib\ORM;
-
+use Exception;
 abstract class Model
 {
     public $db;
@@ -24,7 +24,29 @@ abstract class Model
     public function all()
     {
         $query = "SELECT * FROM {$this->table}";
-        return $this->db->query($query)->fetchArray();
+        $result = $this->db->query($query);
+        $data = [];
+        while($row = $result->fetchArray()){
+            $data[] = $row;
+        }
+        return $data;
+    }
+
+    public function find($id)
+    {
+        if(!isset($id)){
+            throw new Exception("Necessário informar o ID para consulta");
+        }
+        $query = "SELECT * FROM {$this->table} WHERE rowid = :id;";
+        $statment = $this->db->prepare($query);
+        $statment->bindValue(':id', $id);
+        $result = $statment->execute();
+        $data = $result->fetchArray();
+        $data = [
+            "name" => $data['name'],
+            "price" => $data['price']
+        ];
+        return json_encode($data);
     }
 
     public function mountInsertQueryValues($data)

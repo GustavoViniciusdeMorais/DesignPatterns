@@ -19,5 +19,7 @@ sudo docker-compose up -d --build
 sudo docker ps
 sudo docker exec -it designpatterns_php_1 sh
 php Command/sqlite.php
-php commandAPIExample.php
+php commandAPIExample.php insert celular 1200
+php commandAPIExample.php select
+php commandAPIExample.php where 10
 ```
