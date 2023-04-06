@@ -5,11 +5,17 @@ services:
       build:
         context: .
         dockerfile: php.dockerfile
+      container_name: ptphp
       volumes:
         - ./:/var/www/html
       networks:
-        - app-network
+            patterns-app-network:
+                ipv4_address: 11.0.0.9
 
 networks:
-  app-network:
-    driver: bridge
+    patterns-app-network:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: "11.0.0.0/16"

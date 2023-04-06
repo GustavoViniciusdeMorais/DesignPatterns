@@ -1,3 +1,8 @@
 {
-    "name": "gustavo/patterns"
+    "name": "gustavo/patterns",
+    "autoload": {
+        "psr-4": {
+            "GustavoVinicius\\Patterns\\": "./"
+        }
+    }
 }
