@@ -6,6 +6,8 @@ services:
         context: .
         dockerfile: php.dockerfile
       container_name: ptphp
+      ports:
+        - 80:80
       volumes:
         - ./:/var/www/html
       networks:

@@ -7,3 +7,12 @@ Exemplo de uso:
 ```bash
 php script.php [arg1] [arg2] [argN]
 ```
+
+### Uses docker image gustavovinicius/gusphp:latest
+Already has
+- PHP
+- Nginx
+- Composer
+- Git
+- Nano
+
