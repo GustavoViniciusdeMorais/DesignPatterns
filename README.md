@@ -16,3 +16,7 @@ Already has
 - Git
 - Nano
 
+### Install SQLite suport
+```
+apt-get install php8.1-sqlite
+```

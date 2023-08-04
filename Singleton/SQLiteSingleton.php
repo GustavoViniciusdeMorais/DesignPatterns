@@ -4,19 +4,56 @@ namespace DesignPatterns\Singleton;
 
 class SQLiteSingleton
 {
-    private static $instance;
-    private $connection = null;
+    protected static $instance;
+    protected static $connection = null;
 
-    public function __construct($path)
+    public function __construct($path = null)
     {
-        $this->connection = new \PDO("sqlite:".$path);
+        if (empty($path)) {
+            $path = 'singleton.db';
+        }
+        static::$connection = new \PDO("sqlite:".$path);
     }
 
-    public static function getInstance($path)
+    public static function getInstance($path = null)
     {
-        if(self::$instance === null){
-            self::$instance = new SQLiteSingleton($path);
+        if(static::$instance === null){
+            static::$instance = new static($path);
         }
-        return self::$instance;
+        return static::$instance;
+    }
+
+    public static function createDb()
+    {
+        static::$connection->exec(
+            '
+            CREATE TABLE IF NOT EXISTS projects (
+                project_id   INTEGER PRIMARY KEY,
+                project_name TEXT    NOT NULL
+            );
+            '
+        );
+    }
+
+    public static function populateDb()
+    {
+        static::$connection->exec(
+            "
+            INSERT INTO projects (project_id, project_name) VALUES (1, 'test');
+            "
+        );
+    }
+
+    public static function readData()
+    {
+        return static::$connection->exec(
+            "
+            SELECT project_id, project_name FROM projects;
+            "
+        );
     }
 }
+
+$sqlConnection = SQLiteSingleton::getInstance();
+$sqlConnection::createDb();
+$sqlConnection::readData();
