@@ -8,48 +8,6 @@ class DataProvider
 	}
 }
 
-class BusinessClass
-{
-	protected $dataProvider;
-	protected $chartBuilder;
-	
-	public function __construct($dataProvider,ChartInterface $chartBuilder)
-	{
-		$this->dataProvider = $dataProvider;
-		$this->chartBuilder = $chartBuilder;
-	}
-	
-	public function buildChart()
-	{
-		$data = $this->dataProvider->exportData();
-		return $this->chartBuilder->buildChart($data);
-	}
-}
-
-interface ChartInterface
-{
-	public function buildChart(array $data):mixed;
-}
-
-class AnalyticsAdapter implements ChartInterface
-{
-	protected $adaptee;
-	public function __construct($adaptee)
-	{
-		$this->adaptee = $adaptee;
-	}
-	public function buildChart(array $data):mixed
-	{
-		$data = $this->convertData($data);
-		return $this->adaptee->buildChart($data);
-	}
-	public function convertData($data)
-	{
-		// code...
-		return $data;
-	}
-}
-
 class AnalyticsLibrary
 {
 	public function buildChart(array $data)
@@ -59,8 +17,52 @@ class AnalyticsLibrary
 	}
 }
 
-$dataProvider = new DataProvider();
-$analyticsAdapter = new AnalyticsAdapter(new AnalyticsLibrary());
-$businessClass = new BusinessClass($dataProvider, $analyticsAdapter);
+interface ChartInterface
+{
+	public function buildChart():mixed;
+}
+
+class AnalyticsAdapter implements ChartInterface
+{
+	protected $adaptee;
+	protected DataProvider $dataProvider;
+
+	public function __construct($adaptee, $dataProvider)
+	{
+		$this->adaptee = $adaptee;
+		$this->dataProvider = $dataProvider;
+	}
+
+	public function convertData($data)
+	{
+		// code...
+		return $data;
+	}
+
+	public function buildChart():mixed
+	{
+		$data = $this->dataProvider->exportData();
+		$data = $this->convertData($data);
+		return $this->adaptee->buildChart($data);
+	}
+}
+
+class BusinessClass
+{
+	protected $chartBuilder;
+	
+	public function __construct(ChartInterface $chartBuilder)
+	{
+		$this->chartBuilder = $chartBuilder;
+	}
+	
+	public function buildChart()
+	{
+		return $this->chartBuilder->buildChart();
+	}
+}
+
+$analyticsAdapter = new AnalyticsAdapter(new AnalyticsLibrary(), new DataProvider());
+$businessClass = new BusinessClass($analyticsAdapter);
 $chart = $businessClass->buildChart();
 var_dump($chart);
