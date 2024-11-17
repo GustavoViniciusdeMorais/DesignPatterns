@@ -7,7 +7,7 @@ class SQLiteSingleton
     protected static $instance;
     protected static $connection = null;
 
-    public function __construct($path = null)
+    private function __construct($path = null)
     {
         if (empty($path)) {
             $path = 'singleton.db';
