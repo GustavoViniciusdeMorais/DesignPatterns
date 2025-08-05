@@ -4,30 +4,26 @@ namespace Gustavo\Api;
 
 class Collection
 {
-    private static $instance;
     private array $data;
 
     private function __construct() {}
 
-    public function __invoke(array $args)
+    public function __invoke(array $data)
     {
-        foreach ($args as $arg) {
-            array_push(self::$data, $arg);
-        }
-
-        return self::getInstance();
+        $this->data = $data;
+        return $this;
     }
 
-    public static function getInstance()
+    public function each(callable $fn): Object
     {
-        if(static::$instance === null){
-            static::$instance = new static();
+        foreach ($this->data as &$item) {
+            $item = $fn($item);
         }
-        return static::$instance;
+        return $this;
     }
 
-    public function each(callable $fn)
+    public function toArray(): array
     {
-
+        return $this->data;
     }
 }
